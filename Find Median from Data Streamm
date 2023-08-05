@@ -1,0 +1,64 @@
+class MedianFinder {
+    priority_queue<int> part1;
+    priority_queue<int,vector<int>,greater<int>> part2;
+public:
+    
+    MedianFinder() {
+        // part1 will be max-heap
+        part1 = priority_queue<int>{};
+        // part2 will be min-heap
+        part2 = priority_queue<int,vector<int>,greater<int>>{};
+    }
+    
+    void addNum(int num) {
+        // if part1 is empty we push in part1
+        if(part1.size()==0){
+            part1.push(num);
+            return;
+        }
+        // if part1 size is greater than part2.size()
+        if(part1.size() > part2.size()){
+            // data to be pushed is greater then top element of part1
+            // we are pushing the top element of part1 in part2 then
+            // pushing it in part1 to maintain
+            // (part1.size() >= part2.size() the size of both
+
+            if(num < part1.top()){
+                part2.push(part1.top());
+                part1.pop();
+                part1.push(num);
+            }
+            // num > part1.top() so we push in part2
+            else{
+                part2.push(num);
+            }
+        }
+        else{
+            // same logic as above
+            if(num < part1.top()){
+                part1.push(num);
+            }
+            else{
+                part2.push(num);
+                part1.push(part2.top());
+                part2.pop();
+            }
+        }
+    }
+    
+    double findMedian() {
+        if(part1.size() == part2.size()){
+            return (double)(part1.top() + part2.top())/2.0;
+        }
+        else{
+            return (double)part1.top();
+        }
+    }
+};
+
+/**
+ * Your MedianFinder object will be instantiated and called as such:
+ * MedianFinder* obj = new MedianFinder();
+ * obj->addNum(num);
+ * double param_2 = obj->findMedian();
+ */
